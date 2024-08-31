@@ -1,6 +1,7 @@
-<h1>色あてゲーム</h1>
-<p>画面の色をRGBそれぞれの値で答えてください</p>
-<div style="width: 100px; height: 100px; background-color: rgb(<%= @color[:r] %>, <%= @color[:g] %>, <%= @color[:b] %>);"></div>
+<h1>after</h1> 
+<div style="width: 100px; height: 100px; background-color: rgb(255,254,250); border: 2px solid black;"></div> 
+<h1>この色何色</h1> 
+<div style="width: 100px; height: 100px; background-color: rgb(5,24,205);border: 2px solid black;"></div> 
 
 <%= form_with url: check_answer_path, method: :post do %>
   <p>
@@ -26,3 +27,44 @@
   <p>あなたの回答: R=<%= @r %>, G=<%= @g %>, B=<%= @b %></p>
   <p>正解の色: R=<%= @correct_color[:r] %>, G=<%= @correct_color[:g] %>, B=<%= @correct_color[:b] %></p>
 <% end %>
+
+
+
+<!--  border: 2px solid black;-->
+<!--
+</div> 
+
+<h1>色あてゲーム</h1>
+<p>画面の色をRGBそれぞれの値で答えてくださいね</p>
+<p>これであなたも色彩マスター</p>
+
+
+<div style="width: 100px; height: 100px; background-color: rgb(<%= @color[:r] %>, <%= @color[:g] %>, <%= @color[:b] %>);"></div> 
+<div style="width: 100px; height: 100px; background-color: rgb(255,254,255);"></div> 
+
+<%= form_with url: check_answer_path, method: :post do %>
+  <p>
+    <label for="r">R:</label>
+    <input type="number" id="r" name="r" value="<%= @r %>" />
+  </p>
+  <p>
+    <label for="g">G:</label>
+    <input type="number" id="g" name="g" value="<%= @g %>" />
+  </p>
+  <p>
+    <label for="b">B:</label>
+    <input type="number" id="b" name="b" value="<%= @b %>" />
+  </p>
+  <p>
+    <%= submit_tag "回答" %>
+  </p>
+<% end %>
+
+<p><%= @message %></p>
+
+<% if @r && @g && @b %>
+  <p>あなたの回答: R=<%= @r %>, G=<%= @g %>, B=<%= @b %></p>
+  <p>正解の色: R=<%= @correct_color[:r] %>, G=<%= @correct_color[:g] %>, B=<%= @correct_color[:b] %></p>
+<% end %>
+
+-->
