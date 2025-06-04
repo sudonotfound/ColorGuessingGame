@@ -1,56 +1,70 @@
 class GameController < ApplicationController
   def index
-    reset_game
+    unless session[:color].is_a?(Hash) && session[:color].key?('r')
+      generate_new_color
+    end
+
+    @correct_color = session[:color].transform_keys(&:to_sym)
+
+    @r = session.delete(:r)
+    @g = session.delete(:g)
+    @b = session.delete(:b)
+    @message = session.delete(:message)
+    @attempts = session[:attempts] || 0
   end
 
   def check_answer
-    # 入力値の取得
-    @r = params[:r].to_i
-    @g = params[:g].to_i
-    @b = params[:b].to_i
+    r = params[:r].to_i
+    g = params[:g].present? ? params[:g].to_i : nil
+    b = params[:b].present? ? params[:b].to_i : nil
 
-    # 正解の色を取得（新しい色を生成）
-    @randam_num = generate_new_color
-    @ran_r = @randam_num[:r]
-    @ran_g = @randam_num[:g]
-    @ran_b = @randam_num[:b]
+    if g.nil? || b.nil?
+      session[:message] = "RGBの値をすべて入力してください。"
+      redirect_to root_path
+      return
+    end
 
-    # 判定とスコア処理
-    @result = calculate_score(@r, @g, @b, @ran_r, @ran_g, @ran_b)
-    @color = session[:color]
-    @correct_color = session[:color]
+    session[:attempts] ||= 0
+    correct_color = session[:color]&.transform_keys(&:to_sym)
 
-    render :index
+    if correct_color.nil?
+      session[:message] = "正解の色が設定されていません。再度お試しください。"
+      redirect_to root_path
+      return
+    end
+
+    puts "正解の色: R=#{correct_color[:r]}, G=#{correct_color[:g]}, B=#{correct_color[:b]}"
+    puts "ユーザーの入力: R=#{r}, G=#{g}, B=#{b}"
+
+    if r == correct_color[:r] && g == correct_color[:g] && b == correct_color[:b]
+      puts "🎉 正解です！"
+
+      session[:message] = "正解！お見事！新しい問題に挑戦しよう！"
+      session[:attempts] = 0
+      generate_new_color
+    else
+      session[:attempts] += 1
+      puts "❌ 不正解です（#{session[:attempts]} 回目）"
+
+      if session[:attempts] >= 3
+        session[:message] = "3回間違えました！正解は R=#{correct_color[:r]}, G=#{correct_color[:g]}, B=#{correct_color[:b]} でした。新しい問題に挑戦しましょう。"
+        session[:attempts] = 0
+        generate_new_color
+      else
+        session[:message] = "残念、不正解です。あと #{3 - session[:attempts]} 回挑戦できます。"
+      end
+    end
+
+    session[:r] = r
+    session[:g] = g
+    session[:b] = b
+
+    redirect_to root_path
   end
 
   private
 
-  def reset
-    reset_game
-    render :index
-  end
-
-  def new_question
-    generate_new_color
-    render :index
-  end
-
-  def reset_game
-    session[:score] = 0
-    generate_new_color
-  end
-
   def generate_new_color
-    @color = { r: rand(256), g: rand(256), b: rand(256) }
-    session[:color] = @color
-    @color
-  end
-
-  def calculate_score(r, g, b, ran_r, ran_g, ran_b)
-    if r == ran_r && g == ran_g && b == ran_b
-      "正解！お見事！"
-    else
-      "残念、不正解です。"
-    end
+    session[:color] = { 'r' => rand(256), 'g' => rand(256), 'b' => rand(256) }
   end
 end
