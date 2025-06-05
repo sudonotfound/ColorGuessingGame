@@ -4,25 +4,24 @@
 
 <!-- 正解の色の表示 -->
 <h3>この色は何色？</h3>
-<div style="width: 100px; height: 100px; background-color: rgb(<%= @color[:r] %>, <%= @color[:g] %>, <%= @color[:b] %>); border: 2px solid black;"></div> 
-
+<div style="width: 100px; height: 100px; background-color: rgb(<%= @correct_color[:r] %>, <%= @correct_color[:g] %>, <%= @correct_color[:b] %>); border: 2px solid black;"></div>
+<p>現在の挑戦回数: <%= @attempts %> / 3</p>
 <!-- 回答フォーム -->
-<%= form_with url: check_answer_path, method: :post do %>
-  <p>
-    <label for="r">R:</label>
-    <input type="number" id="r" name="r" value="<%= @r %>" min="0" max="255" />
-  </p>
-  <p>
-    <label for="g">G:</label>
-    <input type="number" id="g" name="g" value="<%= @g %>" min="0" max="255" />
-  </p>
-  <p>
-    <label for="b">B:</label>
-    <input type="number" id="b" name="b" value="<%= @b %>" min="0" max="255" />
-  </p>
-  <p>
-    <%= submit_tag "回答" %>
-  </p>
+<%= form_with url: check_answer_path, method: :post, local: true, data: { turbo: false } do %>
+  <%= label_tag :r, 'R:' %>
+  <%= number_field_tag :r, @r, min: 0, max: 255 %>
+
+  <%= label_tag :g, 'G:' %>
+  <%= number_field_tag :g, @g, min: 0, max: 255 %>
+
+  <%= label_tag :b, 'B:' %>
+  <%= number_field_tag :b, @b, min: 0, max: 255 %>
+
+  <%= submit_tag "回答" %>
+<% end %>
+
+<% if @message.present? %>
+  <p><%= @message %></p>
 <% end %>
 
 <!-- 判定結果の表示 -->
@@ -33,7 +32,7 @@
 <!-- ユーザーの回答と正解の表示 -->
 <% if @r && @g && @b %>
   <p>あなたの回答: R=<%= @r %>, G=<%= @g %>, B=<%= @b %></p>
-  <p>正解の色: R=<%= @correct_color[:r] %>, G=<%= @correct_color[:g] %>, B=<%= @correct_color[:b] %></p>
+  <!--<p>正解の色: R=<%= @correct_color[:r] %>, G=<%= @correct_color[:g] %>, B=<%= @correct_color[:b] %></p>-->
 
   <!-- 色を視覚的に比較 -->
   <div style="display: flex; gap: 20px; margin-top: 20px;">
