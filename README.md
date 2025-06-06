@@ -1,24 +1,13 @@
-# README
+# このアプリについて
+このアプリは画面に表示された色をR（赤）、G（緑）、B（青）それぞれの値を0〜255の範囲で回答するシンプルなゲームです。
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# 開発の現状　
+現在のアプリでは、画面に表示された色をもとに最大3回まで回答することができ、3回間違えると新しい問題に切り替わります。
 
-Things you may want to cover:
+# 今後の開発予定
+現状では回答難易度の高い色あてゲームになっているので以下にゲームの構想を記載する。
+- 回答回数ごとのヒントを与える
+- ポーカーのようにひ
+- ポイントは正解が最も高く、正解からのごさごとに得られるポイントが変わるようぬする
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+...
